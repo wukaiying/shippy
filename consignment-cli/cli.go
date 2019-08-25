@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	ADDRESS           = "localhost:50051"
+	ADDRESS           = "192.168.99.100:50051"
 	DEFAULT_INFO_FILE = "consignment.json"
 )
 
