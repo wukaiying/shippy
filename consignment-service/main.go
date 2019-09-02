@@ -4,12 +4,12 @@
 package main
 
 import (
+    "context"
+    "github.com/micro/go-micro/util/log"
+
     // 导如 protoc 自动生成的包
     pb "shippy/consignment-service/proto/consignment"
-    "context"
-    "net"
-    "log"
-    "google.golang.org/grpc"
+    "github.com/micro/go-micro"
 )
 
 const (
@@ -71,20 +71,14 @@ func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest) (*pb.
 
 
 func main() {
-    listener, err := net.Listen("tcp", PORT)
-    if err != nil {
-        log.Fatalf("failed to listen: %v", err)
-    }
-    log.Printf("listen on: %s\n", PORT)
-
-    server := grpc.NewServer()
+    server := micro.NewService(
+        micro.Name("go.micro.srv.consignment"),
+        micro.Version("latest"),
+        )
+    server.Init()
     repo := Repository{}
-
-    // 向 rRPC 服务器注册微服务
-    // 此时会把我们自己实现的微服务 service 与协议中的 ShippingServiceServer 绑定
-    pb.RegisterShippingServiceServer(server, &service{repo})
-
-    if err := server.Serve(listener); err != nil {
+    pb.RegisterShippingServiceHandler(server.Server(), &service{repo})
+    if err := server.Run(); err != nil {
         log.Fatalf("failed to serve: %v", err)
     }
 }
