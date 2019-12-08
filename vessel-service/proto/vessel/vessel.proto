@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package go.micro.srv.vessel;
+
+service VesselService {
+    rpc FindAvailable (Specification) returns (Response) {
+    }
+}
+
+message Vessel {
+    string id = 1;    //编号
+    int32 capacity = 2;  //最大容量(集装箱的个数)
+    int32 max_weight = 3;
+    string name = 4;
+    bool available = 5; //是否可用
+    string ower_id = 6;
+}
+
+//等待运送的货物
+message Specification {
+    int32 capacity = 1;
+    int32 max_weight = 2;
+}
+
+//返回结果，如果有合适的货轮则返回货轮信息
+message Response {
+    Vessel vessel = 1;
+    repeated Vessel vessels = 2;
+}

@@ -1,14 +1,17 @@
 package main
 
 import (
-	pb "shippy/consignment-service/proto/consignment"
-	"io/ioutil"
+	"context"
 	"encoding/json"
 	"errors"
-	"google.golang.org/grpc"
+	"io/ioutil"
 	"log"
 	"os"
-	"context"
+	pb "shippy/consignment-service/proto/consignment"
+	microclient "github.com/micro/go-micro/client"
+
+
+	"google.golang.org/grpc"
 )
 
 const (
@@ -38,7 +41,7 @@ func main()  {
 	defer conn.Close()
 
 	// 初始化 gRPC 客户端
-	client := pb.NewShippingServiceClient(conn)
+	client := pb.NewShippingService("go.micro.srv.consignment", microclient.DefaultClient)
 
 	// 在命令行中指定新的货物信息 json 文件
 	infoFile := DEFAULT_INFO_FILE
